@@ -1,5 +1,6 @@
 const axios = require('axios');
 const _ = require('lodash');
+const error = require('../helpers/error');
 
 const tapfiliate = axios.create({
     baseURL: "https://api.tapfiliate.com/1.6/",
@@ -11,20 +12,17 @@ const tapfiliate = axios.create({
 });
 
 const getAffiliates = (page) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         tapfiliate.get(`/affiliates/?page=${page}`)
         .then(({data}) => {
             return resolve(data);
         })
-        .catch((err) => {
-            console.log(err.message);
-            reject(err);
-        })
+        .catch(error)
     });
 }
 
-const getAffiliatesCount = async (url) => {
-    return new Promise((resolve, reject) => {
+const getPageCount = async (url) => {
+    return new Promise((resolve) => {
         tapfiliate.get(url)
         .then(async ({ headers }) => {
             let link_strings = headers.link.split(',');
@@ -32,34 +30,28 @@ const getAffiliatesCount = async (url) => {
             let count = parseInt(pages.replace('>; rel=\"last\"', '').replace('page=', ''));
             return resolve(count);
         })
-        .catch((err) => {
-            console.log(err.message);
-            reject(err);
-        });
+        .catch(error);
     })
 };
 
 const listAffiliatesInProgram = async (program_id) => {
     let url = `/programs/${program_id}/affiliates`;
-    let pages = await getAffiliatesCount(url);
+    let pages = await getPageCount(url);
     const arr = [];
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
         for(i = 1; i < pages + 1; i++) {
             await tapfiliate.get(`${url}/?page=${i}`)
             .then(({data}) => {
                 arr.push(...data);
             })
-            .catch((err) => {
-                console.log(err.message);
-                reject(err);
-            })
+            .catch(error);
         }
         return resolve(arr);
     });    
 }
 
 const getPrograms = () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         tapfiliate.get(`/programs`)
         .then(({ data }) => {
             const arr = [];
@@ -68,16 +60,13 @@ const getPrograms = () => {
             })
             return resolve(arr);
         })
-        .catch((err) => {
-            console.log(err.message);
-            reject(err);
-        })
+        .catch(error)
     });
 };
 
 const listAffiliates = async () => {
     let arr = [];
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         tapfiliate.get(`/affiliates`)
         .then(async ({ headers }) => {
             let link_strings = headers.link.split(',');
@@ -88,41 +77,32 @@ const listAffiliates = async () => {
                 arr.push(...data);
             }
         })
-        .catch((err) => {
-            console.log(err);
-            reject(err);
-        });
+        .catch(error);
 
         return resolve(arr);
     })
 }
 
 const listCommissions = async (affiliate_id) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         tapfiliate.get(`/commissions/?affiliate_id=${affiliate_id}`)
         .then(({ data }) => {
             console.log(`${data.length} commissions found for affiliate id: ${affiliate_id}.`);
             return resolve(data);
         })
-        .catch((err) => {
-            console.log(err.message);
-            reject(err);
-        });
+        .catch(error);
     });
 };
 
 const conversionExists = async (order_id) => {
     let url = `/conversions/?external_id=${order_id}`;
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         tapfiliate.get(url)
         .then(({ data }) => {
             return resolve(data);
         })
-        .catch((err) => {
-            console.log(err.message);
-            reject(err);
-        })
+        .catch(error)
     });    
 };
 

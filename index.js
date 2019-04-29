@@ -1,7 +1,12 @@
 const dotenv = require('dotenv').config();
 const cron = require('node-cron');
-const { getPrograms, listAffiliatesInProgram, listCommissions, conversionExists, createConversion } = require('./api/tapfiliate');
-const { getOrders } = require('./api/shopify');
+const { 
+        getPrograms,
+        listAffiliatesInProgram,
+        conversionExists,
+        createConversion
+} = require('./api/tapfiliate');
+const getOrdersFromShopify = require('./api/shopify');
 const _ = require('lodash');
 
 //TODO: Set cron to run every day at 2am
@@ -14,7 +19,7 @@ module.exports = async () => {
     let processed = 0;
 
     const programs = await getPrograms();
-    const orders = await getOrders();
+    const orders = await getOrdersFromShopify();
 
     for (const program of programs) {
         let affiliates = await listAffiliatesInProgram(program);
@@ -33,8 +38,8 @@ module.exports = async () => {
         const doesConversionExist = await conversionExists(order.order_number)
         _.isEmpty(doesConversionExist) ? order_arr.push(order) : console.log(`Order ${order.order_number} exists as conversion.`);
     }
+    
     console.log(`Checking ${order_arr.length} new orders for commission upload.`)
-
 
     _.each(affiliate_arr, (affiliate) => {
 
