@@ -3,7 +3,7 @@ const _ = require('lodash');
 const error = require('../helpers/error');
 
 const tapfiliate = axios.create({
-    baseURL: "https://api.tapfiliate.com/1.6/",
+    baseURL: process.env.TAPFILIATE_API_URL,
     timeout: 5000,
     headers: {
         "Api-Key": process.env.TAPFILIATE_API_KEY,
@@ -116,9 +116,7 @@ const createConversion = (external_id, referral_code, amount, coupon) => {
     .then(() => {
         console.log(`Created conversion for affiliate ${referral_code} for ${external_id}.`)
     })
-    .catch((err) => {
-        console.log(err.message);
-    });
+    .catch(error);
 };
 
 module.exports = {
