@@ -1,4 +1,4 @@
-const tapfiliate = require('./api/tapfiliate');
+const tapfiliate = require('./api/tapfiliate/tapfiliate');
 const shopify = require('./api/shopify');
 
 module.exports = async () => {

@@ -4,6 +4,8 @@ Solves the issue of connecting coupon code usage to conversions that were not ma
 
 Checks shopify orders daily and if affiliate order does not exist, creates it in Tapfiliate.
 
+Automates all processes for the affiliate program including processing payments via PayPal Payouts.
+
 ## Variables for deployment
 
 - SHOPIFY_API_KEY
@@ -11,6 +13,15 @@ Checks shopify orders daily and if affiliate order does not exist, creates it in
 - TAPFILIATE_API_KEY
 - STORE_NAME
 - CRON_SCHEDULE
+- PAYPAL_SANDBOX_API
+- PAYPAL_CLIENT_ID
+- PAYPAL_SECRET
+- PAYPAL_ACCOUNT
+
+## APIs
+- Shopify
+- Tapfiliate
+- Paypal
 
 ## Modules Used
 

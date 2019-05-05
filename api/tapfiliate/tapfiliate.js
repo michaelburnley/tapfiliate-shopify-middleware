@@ -1,6 +1,6 @@
 const axios = require('axios');
 const _ = require('lodash');
-const error = require('../helpers/error');
+const error = require('../../helpers/error');
 
 const tapfiliate = axios.create({
     baseURL: process.env.TAPFILIATE_API_URL,
@@ -10,6 +10,36 @@ const tapfiliate = axios.create({
         "Content-Type": "application/json"
     }
 });
+
+const createPayments = (payments) => {
+    return new Promise((resolve) => {
+        tapfiliate.post('/payments', payments)
+        .then(() => {
+            console.log(`Payments updated in Tapfiliate.`)
+        })
+        .catch(error);
+    });
+}
+
+const getAllBalances = () => {
+    return new Promise((resolve) => {
+        tapfiliate.get('/balances')
+        .then(({ data }) => {
+            return resolve(data);
+        })
+        .catch(error);
+    });
+};
+
+const getAffiliate = (id) => {
+    return new Promise((resolve) => {
+        tapfiliate.get(`/affiliates/${id}`)
+        .then(({data}) => {
+            return resolve(data);
+        })
+        .catch(error);
+    })
+};
 
 const getAffiliates = (page) => {
     return new Promise((resolve) => {
@@ -120,6 +150,8 @@ const createConversion = (external_id, referral_code, amount, coupon) => {
 };
 
 module.exports = {
+    getAffiliate,
+    getAllBalances,
     getAffiliates,
     listAffiliates,
     getPrograms,
