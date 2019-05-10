@@ -2,11 +2,14 @@ const dotenv = require('dotenv').config();
 const cron = require('node-cron');
 const tapfiliate = require('./api/tapfiliate');
 const processPayments = require('./api/payments');
-const _ = require('lodash');
 
 //TODO: Set cron to run every day at 2am
 
-module.exports = async () => {
+
+cron.schedule('0 2 * * *', async () => {
     await tapfiliate();
+});
+
+cron.schedule('0 8 15 * *', async () => {
     await processPayments();
-}
+});

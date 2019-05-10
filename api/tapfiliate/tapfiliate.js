@@ -16,6 +16,7 @@ const createPayments = (payments) => {
         tapfiliate.post('/payments', payments)
         .then(() => {
             console.log(`Payments updated in Tapfiliate.`)
+            resolve();
         })
         .catch(error);
     });

@@ -10,19 +10,21 @@ const auth = {
     password: process.env.PAYPAL_SECRET
 };
 
+const headers = {
+    "content-type": "application/x-www-form-urlencoded",
+    "Accept-Language": "en_US"
+};
+
 
 module.exports = () => {
     return new Promise((resolve) => {
         axios({
             method: `post`,
             url: `${process.env.PAYPAL_API_URL}/v1/oauth2/token`,
-            headers: {
-                "content-type": "application/x-www-form-urlencoded",
-                "Accept-Language": "en_US"
-            },
+            headers,
             withCredentials: true,
             data: qs.stringify(data),
-            auth: auth,
+            auth,
         })
         .then((response) => {
             resolve(response.data);
